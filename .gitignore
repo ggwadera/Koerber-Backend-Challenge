@@ -31,4 +31,4 @@ build/
 ### VS Code ###
 .vscode/
 
-db/data
+db/data/*.csv

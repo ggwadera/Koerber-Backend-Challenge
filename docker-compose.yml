@@ -12,7 +12,6 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgres
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=challenge
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
 
   db:
     image: postgres:13
@@ -22,3 +21,10 @@ services:
       - POSTGRES_PASSWORD=challenge
       - POSTGRES_USER=postgres
       - POSTGRES_DB=postgres
+    volumes:
+      - db:/var/lib/postgresql/data
+      - ./db/data:/opt/data
+      - ./db/scripts:/docker-entrypoint-initdb.d
+
+volumes:
+  db:

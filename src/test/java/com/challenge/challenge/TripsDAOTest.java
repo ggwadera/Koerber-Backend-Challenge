@@ -1,16 +1,21 @@
 package com.challenge.challenge;
 
+import com.challenge.challenge.domain.ZoneDateTrips;
 import com.challenge.challenge.domain.ZoneTrips;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static com.challenge.challenge.domain.TopZonesSort.DROPOFFS;
 import static com.challenge.challenge.domain.TopZonesSort.PICKUPS;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class TripsDAOTest extends BaseTest {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+class TripsDAOTest {
 
     @Autowired
     protected TripsDAO dao;
@@ -39,5 +44,20 @@ class TripsDAOTest extends BaseTest {
         );
         List<ZoneTrips> topZones = dao.getTopZones(DROPOFFS);
         assertThat(topZones).isEqualTo(expected);
+    }
+
+    @Test
+    void testGetZoneTrips() {
+        LocalDate date = LocalDate.of(2023, 1, 3);
+        var expected = new ZoneDateTrips("Astoria", date, 2L, 2L);
+        Optional<ZoneDateTrips> zoneTrips = dao.getZoneTrips(7L, date);
+        assertThat(zoneTrips).isPresent().contains(expected);
+    }
+
+    @Test
+    void testGetZoneTripsEmptyResult() {
+        LocalDate date = LocalDate.of(2024, 1, 3);
+        Optional<ZoneDateTrips> zoneTrips = dao.getZoneTrips(7L, date);
+        assertThat(zoneTrips).isEmpty();
     }
 }

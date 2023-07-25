@@ -64,3 +64,5 @@ INSERT INTO trip (pickup_datetime, dropoff_datetime, pickup_location_id, dropoff
 INSERT INTO trip (pickup_datetime, dropoff_datetime, pickup_location_id, dropoff_location_id) VALUES ('2023-01-11 17:55:48', '2023-01-11 18:05:48', 2, 6);
 INSERT INTO trip (pickup_datetime, dropoff_datetime, pickup_location_id, dropoff_location_id) VALUES ('2023-01-10 18:45:47', '2023-01-10 18:55:47', 1, 6);
 INSERT INTO trip (pickup_datetime, dropoff_datetime, pickup_location_id, dropoff_location_id) VALUES ('2023-01-31 02:19:04', '2023-01-31 02:49:04', 9, 6);
+
+refresh materialized view trips_by_zone_and_date;

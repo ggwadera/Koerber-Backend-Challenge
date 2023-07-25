@@ -1,0 +1,10 @@
+server.servlet.context-path: /challenge
+spring:
+  datasource:
+    url: jdbc:tc:postgresql:13:///challenge?TC_INITSCRIPT=file:db/scripts/00_init_tables.sql
+  flyway:
+    baseline-on-migrate: true
+    baseline-version: 0
+logging:
+  level:
+    sql: debug

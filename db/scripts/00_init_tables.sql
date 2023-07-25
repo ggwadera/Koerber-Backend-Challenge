@@ -8,6 +8,7 @@ create table location
 
 create table trip
 (
+    id                  bigserial primary key,
     pickup_datetime     timestamp not null,
     dropoff_datetime    timestamp not null,
     pickup_location_id  bigint    not null references location (id),

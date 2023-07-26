@@ -1,12 +1,17 @@
 package com.challenge.challenge;
 
+import com.challenge.challenge.domain.Trip;
+import com.challenge.challenge.domain.TripFilter;
 import com.challenge.challenge.domain.ZoneDailyTrips;
 import com.challenge.challenge.domain.ZoneTotals;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,5 +66,30 @@ class TripsDAOTest {
         LocalDate date = LocalDate.of(2024, 1, 3);
         Optional<ZoneDailyTrips> zoneTrips = dao.getZoneTrips(7L, date);
         assertThat(zoneTrips).isEmpty();
+    }
+
+    @Test
+    void testFindTripsByPickupLocationId() {
+        var filter = filterWithPickupLocationId(1);
+        Page<Trip> trips = dao.findTrips(filter, PageRequest.of(0, 10));
+        assertThat(trips.toList()).isNotEmpty()
+            .extracting("pickupLocation.id").containsOnly(1L);
+    }
+
+    @Test
+    void testFindTripsByPickupDate() {
+        LocalDate date = LocalDate.of(2023, 1, 1);
+        var filter = filterWithPickupDate(date);
+        Page<Trip> trips = dao.findTrips(filter, PageRequest.of(0, 10));
+        assertThat(trips.toList()).isNotEmpty();
+        assertThat(trips.map(Trip::getPickupDateTime).map(LocalDateTime::toLocalDate).toList()).containsOnly(date);
+    }
+
+    private static TripFilter filterWithPickupLocationId(long id) {
+        return new TripFilter(id, null, null, null, null, null, null, null);
+    }
+
+    private static TripFilter filterWithPickupDate(LocalDate date) {
+        return new TripFilter(null, null, date, null, null, null, null, null);
     }
 }

@@ -25,6 +25,16 @@ public class Location {
     @Column(name = "service_zone")
     private String serviceZone;
 
+    public Location() {
+    }
+
+    public Location(Long id, String borough, String zone, String serviceZone) {
+        this.id = id;
+        this.borough = borough;
+        this.zone = zone;
+        this.serviceZone = serviceZone;
+    }
+
     public Long getId() {
         return id;
     }

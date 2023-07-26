@@ -25,6 +25,17 @@ public class Trip {
     @JoinColumn(name = "dropoff_location_id")
     private Location dropoffLocation;
 
+    public Trip() {
+    }
+
+    public Trip(Long id, LocalDateTime pickupDateTime, LocalDateTime dropoffDateTime, Location pickupLocation, Location dropoffLocation) {
+        this.id = id;
+        this.pickupDateTime = pickupDateTime;
+        this.dropoffDateTime = dropoffDateTime;
+        this.pickupLocation = pickupLocation;
+        this.dropoffLocation = dropoffLocation;
+    }
+
     public Long getId() {
         return id;
     }

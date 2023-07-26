@@ -1,5 +1,7 @@
 package com.challenge.challenge;
 
+import com.challenge.challenge.domain.Location;
+import com.challenge.challenge.domain.Trip;
 import com.challenge.challenge.domain.ZoneDailyTrips;
 import com.challenge.challenge.domain.ZoneTotals;
 import com.challenge.challenge.response.ZoneTripsResponse;
@@ -8,11 +10,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static com.challenge.challenge.domain.ZoneTotalsSort.DROPOFFS;
 import static com.challenge.challenge.domain.ZoneTotalsSort.PICKUPS;
@@ -97,5 +102,42 @@ class TripsControllerTest {
                 content().contentType(APPLICATION_JSON),
                 content().json(mapper.writeValueAsString(expected))
             );
+    }
+
+    @Test
+    void searchTrips() throws Exception {
+        when(dao.findTrips(any(), any())).thenReturn(new PageImpl<>(List.of(getTrip(), getTrip(), getTrip())));
+        mvc.perform(get("/list-yellow")
+            .param("page", "0")
+            .param("size", "10"))
+            .andExpectAll(
+                status().isOk(),
+                content().contentType(APPLICATION_JSON),
+                jsonPath("$.number").value(0),
+                jsonPath("$.size").value(3),
+                jsonPath("$.content.length()").value(3),
+                jsonPath("$.last").value(true)
+            );
+    }
+
+    private static Trip getTrip() {
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        return new Trip(
+            random.nextLong(),
+            LocalDateTime.now().minusMinutes(random.nextLong(60)),
+            LocalDateTime.now(),
+            new Location(
+                random.nextLong(),
+                "pickup",
+                "pickup",
+                "pickup"
+            ),
+            new Location(
+                random.nextLong(),
+                "dropoff",
+                "dropoff",
+                "dropoff"
+            )
+        );
     }
 }

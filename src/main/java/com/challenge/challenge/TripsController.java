@@ -3,9 +3,13 @@ package com.challenge.challenge;
 import com.challenge.challenge.domain.ZoneDailyTrips;
 import com.challenge.challenge.domain.ZoneTotalsSort;
 import com.challenge.challenge.request.TopZonesRequest;
+import com.challenge.challenge.request.TripFilterRequest;
 import com.challenge.challenge.request.ZoneTripsRequest;
 import com.challenge.challenge.response.TopZonesResponse;
+import com.challenge.challenge.response.TripResponse;
 import com.challenge.challenge.response.ZoneTripsResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,5 +42,11 @@ public class TripsController {
             .map(ZoneTripsResponse::new)
             .map(ResponseEntity::ok)
             .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/list-yellow")
+    public Page<TripResponse> getTripsPage(Pageable pageable, TripFilterRequest filterRequest) {
+        return tripsDAO.findTrips(filterRequest.toDomain(), pageable)
+            .map(TripResponse::new);
     }
 }

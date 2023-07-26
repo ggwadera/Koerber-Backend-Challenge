@@ -1,9 +1,9 @@
 package com.challenge.challenge;
 
-import com.challenge.challenge.domain.TopZonesSort;
-import com.challenge.challenge.domain.ZoneTrips;
+import com.challenge.challenge.domain.ZoneTotalsSort;
 import com.challenge.challenge.request.TopZonesRequest;
 import com.challenge.challenge.response.TopZonesResponse;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,9 +20,12 @@ public class TripsController {
     }
 
     @GetMapping("/top-zones")
-    public TopZonesResponse getTopZones(@Valid TopZonesRequest request) {
-        TopZonesSort zonesSort = TopZonesSort.valueOf(request.sort().toUpperCase());
-        List<ZoneTrips> topZones = tripsDAO.getTopZones(zonesSort);
-        return new TopZonesResponse(topZones.stream().map(TopZonesResponse.TopZone::new).toList());
+    public ResponseEntity<TopZonesResponse> getTopZones(@Valid TopZonesRequest request) {
+        ZoneTotalsSort zonesSort = ZoneTotalsSort.valueOf(request.sort().toUpperCase());
+        var results = tripsDAO.getTopZones(zonesSort).stream()
+            .map(TopZonesResponse.TopZone::new)
+            .toList();
+        return ResponseEntity.ok(new TopZonesResponse(results));
+    }
     }
 }

@@ -1,6 +1,6 @@
 package com.challenge.challenge.response;
 
-import com.challenge.challenge.domain.ZoneTrips;
+import com.challenge.challenge.domain.ZoneTotals;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
@@ -19,8 +19,8 @@ public record TopZonesResponse(
         Long dropoffTotal
     ) {
 
-        public TopZone(ZoneTrips zoneTrips) {
-            this(zoneTrips.zone(), zoneTrips.pickups(), zoneTrips.dropoffs());
+        public TopZone(ZoneTotals zoneTotals) {
+            this(zoneTotals.getZone(), zoneTotals.getPickupTotal(), zoneTotals.getDropoffTotal());
         }
     }
 

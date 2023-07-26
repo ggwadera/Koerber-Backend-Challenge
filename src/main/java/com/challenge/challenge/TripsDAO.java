@@ -3,16 +3,20 @@ package com.challenge.challenge;
 import com.challenge.challenge.domain.ZoneDailyTrips;
 import com.challenge.challenge.domain.ZoneTotals;
 import com.challenge.challenge.domain.ZoneTotalsSort;
+import com.challenge.challenge.repository.ZoneDailyTripsRepository;
 import com.challenge.challenge.repository.ZoneTotalsRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class TripsDAO {
 
     private final ZoneTotalsRepository zoneTotalsRepository;
+    private final ZoneDailyTripsRepository zoneDailyTripsRepository;
 
     public TripsDAO(ZoneTotalsRepository zoneTotalsRepository, ZoneDailyTripsRepository zoneDailyTripsRepository) {
         this.zoneTotalsRepository = zoneTotalsRepository;
@@ -23,14 +27,8 @@ public class TripsDAO {
         return zoneTotalsRepository.findTop5By(Sort.by(sort.getColumn()).descending());
     }
 
-    public List<ZoneTrips> getTopZones(TopZonesSort sort) {
-        return jdbcTemplate.query("select zone, pickup_total, dropoff_total from trips_by_zone " +
-                                  "order by " + sort.getColumn() + " desc limit 5",
-            (rs, rowNum) -> new ZoneTrips(
-                rs.getString("zone"),
-                rs.getLong("pickup_total"),
-                rs.getLong("dropoff_total"))
-        );
+    public Optional<ZoneDailyTrips> getZoneTrips(final Long zoneId, final LocalDate date) {
+        return zoneDailyTripsRepository.findByLocationIdAndDate(zoneId, date);
     }
 
 }

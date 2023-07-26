@@ -12,4 +12,12 @@ public enum ZoneTotalsSort {
     public String getColumn() {
         return column;
     }
+
+    public static ZoneTotalsSort of(String sort) {
+        return switch (sort.toUpperCase()) {
+            case "PICKUPS" -> PICKUPS;
+            case "DROPOFFS" -> DROPOFFS;
+            default -> null;
+        };
+    }
 }
